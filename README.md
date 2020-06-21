@@ -1,4 +1,4 @@
-# Abapt string map
+# Abap string map
 
 String map primitive implementation for abap
 
