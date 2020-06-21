@@ -35,6 +35,9 @@ class ZCL_ABAP_STRING_MAP definition
     methods size
       returning
         value(rv_size) type i .
+    methods is_empty
+      returning
+        value(rv_yes) type abap_bool .
     methods delete
       importing
         !iv_key type string .
@@ -44,6 +47,7 @@ class ZCL_ABAP_STRING_MAP definition
     methods values
       returning
         value(rt_values) type string_table .
+    methods clear.
   protected section.
   private section.
     data mt_entries type tts_entries.
@@ -53,6 +57,11 @@ ENDCLASS.
 
 
 CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
+
+
+  method clear.
+    clear mt_entries.
+  endmethod.
 
 
   method create.
@@ -83,6 +92,11 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     read table mt_entries transporting no fields with key k = iv_key.
     rv_has = boolc( sy-subrc = 0 ).
 
+  endmethod.
+
+
+  method is_empty.
+    rv_yes = boolc( lines( mt_entries ) = 0 ).
   endmethod.
 
 

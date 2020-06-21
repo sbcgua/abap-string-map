@@ -7,7 +7,7 @@ class ltcl_string_map definition
   private section.
 
     methods get_set_has for testing.
-    methods size for testing.
+    methods size_empty_clear for testing.
     methods delete for testing.
     methods keys_values for testing.
 
@@ -57,7 +57,7 @@ class ltcl_string_map implementation.
 
   endmethod.
 
-  method size.
+  method size_empty_clear.
 
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
@@ -65,6 +65,10 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       exp = 0
       act = lo_cut->size( ) ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_true
+      act = lo_cut->is_empty( ) ).
 
     lo_cut->set(
       iv_key = 'A'
@@ -89,6 +93,20 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       exp = 2
       act = lo_cut->size( ) ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_false
+      act = lo_cut->is_empty( ) ).
+
+    lo_cut->clear( ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 0
+      act = lo_cut->size( ) ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_true
+      act = lo_cut->is_empty( ) ).
 
   endmethod.
 
