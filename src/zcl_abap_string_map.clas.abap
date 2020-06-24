@@ -48,10 +48,21 @@ class ZCL_ABAP_STRING_MAP definition
       returning
         value(rt_values) type string_table .
     methods clear.
+    methods to_abap
+      changing
+        !cs_container TYPE any.
+    methods from_abap
+      importing
+        !is_container TYPE any.
+    methods strict
+      importing
+        !iv_strict type abap_bool default abap_true
+      returning
+        value(ro_instance) type ref to zcl_abap_string_map .
   protected section.
   private section.
     data mt_entries type tts_entries.
-
+    data mv_is_strict type abap_bool.
 ENDCLASS.
 
 
@@ -66,12 +77,41 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method create.
     create object ro_instance.
+    ro_instance->mv_is_strict = abap_true.
   endmethod.
 
 
   method delete.
 
     delete mt_entries where k = iv_key.
+
+  endmethod.
+
+
+  method from_abap.
+
+    data lo_type type ref to cl_abap_typedescr.
+    data lo_struc type ref to cl_abap_structdescr.
+    field-symbols <c> like line of lo_struc->components.
+    field-symbols <val> type any.
+
+    clear mt_entries.
+
+    lo_type = cl_abap_typedescr=>describe_by_data( is_container ).
+    if lo_type->type_kind <> cl_abap_typedescr=>typekind_struct1
+      and lo_type->type_kind <> cl_abap_typedescr=>typekind_struct2.
+      lcx_error=>raise( 'Only structures supported' ).
+    endif.
+
+    lo_struc ?= lo_type.
+    loop at lo_struc->components assigning <c>.
+      check <c>-type_kind co 'bsI8PaeFCNgXyDT'. " values
+      assign component <c>-name of structure is_container to <val>.
+      assert sy-subrc = 0.
+      set(
+        iv_key = |{ <c>-name }|
+        iv_val = |{ <val> }| ).
+    endloop.
 
   endmethod.
 
@@ -130,6 +170,43 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method size.
 
     rv_size = lines( mt_entries ).
+
+  endmethod.
+
+
+  method strict.
+    mv_is_strict = iv_strict.
+    ro_instance = me.
+  endmethod.
+
+
+  method to_abap.
+
+    data lo_type type ref to cl_abap_typedescr.
+    data lo_struc type ref to cl_abap_structdescr.
+    data lv_field type string.
+    field-symbols <entry> like line of mt_entries.
+    field-symbols <val> type any.
+
+    lo_type = cl_abap_typedescr=>describe_by_data( cs_container ).
+    if lo_type->type_kind <> cl_abap_typedescr=>typekind_struct1
+      and lo_type->type_kind <> cl_abap_typedescr=>typekind_struct2.
+      lcx_error=>raise( 'Only structures supported' ).
+    endif.
+
+    lo_struc ?= lo_type.
+    loop at mt_entries assigning <entry>.
+      lv_field = to_upper( <entry>-k ).
+      assign component lv_field of structure cs_container to <val>.
+      if sy-subrc = 0.
+        " TODO check target type ?
+        <val> = <entry>-v.
+      elseif mv_is_strict = abap_false.
+        continue.
+      else.
+        lcx_error=>raise( |Component { lv_field } not found in target| ).
+      endif.
+    endloop.
 
   endmethod.
 
