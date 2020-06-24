@@ -18,6 +18,8 @@ class ZCL_ABAP_STRING_MAP definition
     class-methods create
       returning
         value(ro_instance) type ref to zcl_abap_string_map .
+    methods constructor.
+
     methods get
       importing
         !iv_key type string
@@ -75,9 +77,13 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   endmethod.
 
 
+  method constructor.
+    mv_is_strict = abap_true.
+  endmethod.
+
+
   method create.
     create object ro_instance.
-    ro_instance->mv_is_strict = abap_true.
   endmethod.
 
 
