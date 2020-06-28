@@ -32,7 +32,7 @@
       "communication": true,
       "statics": true,
       "systemCall": true,
-      "defaultKey": true,
+      "defaultKey": false,
       "break": true
     },
     "begin_end_names": true,
@@ -67,7 +67,7 @@
     },
     "constructor_visibility_public": true,
     "contains_tab": true,
-    "definitions_top": true,
+    "definitions_top": false,
     "description_empty": true,
     "double_space": {
       "exclude": [],
@@ -199,10 +199,10 @@
       "ignoreNames": [],
       "ignorePatterns": [],
       "ignoreExceptions": true,
-      "importing": "^I._.+$",
-      "returning": "^R._.+$",
-      "changing": "^C._.+$",
-      "exporting": "^E._.+$"
+      "importing": "^I.?_.+$",
+      "returning": "^R.?_.+$",
+      "changing": "^C.?_.+$",
+      "exporting": "^E.?_.+$"
     },
     "mix_returning": true,
     "msag_consistency": true,
@@ -220,7 +220,7 @@
     "no_public_attributes": {
       "exclude": [],
       "reason": "",
-      "allowReadOnly": false
+      "allowReadOnly": true
     },
     "object_naming": {
       "exclude": [],
@@ -285,7 +285,7 @@
     "remove_descriptions": {
       "exclude": [],
       "reason": "",
-      "ignoreExceptions": false
+      "ignoreExceptions": true
     },
     "rfc_error_handling": true,
     "selection_screen_naming": {
