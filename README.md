@@ -1,5 +1,5 @@
 ![abaplint](https://github.com/sbcgua/abap-string-map/workflows/abaplint/badge.svg)
-![abap package version](https://img.shields.io/endpoint?url=https://shield.abap.space/version-shield-json/github/sbcgua/abap-string-map/src/zcl_abap_string_map.clas.abap)]
+![abap package version](https://img.shields.io/endpoint?url=https://shield.abap.space/version-shield-json/github/sbcgua/abap-string-map/src/zcl_abap_string_map.clas.abap)
 
 # Abap string map
 
