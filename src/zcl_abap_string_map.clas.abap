@@ -5,6 +5,8 @@ class zcl_abap_string_map definition
 
   public section.
 
+    constants version type string value 'v1.0.0'.
+
     types:
       begin of ty_entry,
           k type string,
@@ -65,7 +67,7 @@ class zcl_abap_string_map definition
   private section.
     data mt_entries type tts_entries.
     data mv_is_strict type abap_bool.
-endclass.
+ENDCLASS.
 
 
 
