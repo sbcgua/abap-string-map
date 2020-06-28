@@ -1,4 +1,4 @@
-name: Run abaplint
+name: abaplint
 on:
   push:
     branches:
