@@ -1,4 +1,4 @@
-class ZCL_ABAP_STRING_MAP definition
+class zcl_abap_string_map definition
   public
   final
   create public .
@@ -52,10 +52,10 @@ class ZCL_ABAP_STRING_MAP definition
     methods clear.
     methods to_abap
       changing
-        !cs_container TYPE any.
+        !cs_container type any.
     methods from_abap
       importing
-        !is_container TYPE any.
+        !is_container type any.
     methods strict
       importing
         !iv_strict type abap_bool default abap_true
@@ -65,7 +65,7 @@ class ZCL_ABAP_STRING_MAP definition
   private section.
     data mt_entries type tts_entries.
     data mv_is_strict type abap_bool.
-ENDCLASS.
+endclass.
 
 
 
