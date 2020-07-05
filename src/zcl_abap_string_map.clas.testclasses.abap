@@ -17,10 +17,11 @@ class ltcl_string_map definition
     methods size_empty_clear for testing.
     methods delete for testing.
     methods keys_values for testing.
-    methods to_abap for testing.
-    methods from_abap for testing.
+    methods to_struc for testing.
+    methods from_struc for testing.
     methods strict for testing.
-    methods from_to_abap_negative for testing.
+    methods from_to_struc_negative for testing.
+    methods from_entries for testing.
 
 endclass.
 
@@ -181,7 +182,7 @@ class ltcl_string_map implementation.
 
   endmethod.
 
-  method to_abap.
+  method to_struc.
 
     data ls_struc_act type ty_struc.
     data ls_struc_exp type ty_struc.
@@ -198,7 +199,7 @@ class ltcl_string_map implementation.
       iv_key = 'c'
       iv_val = '123' ).
 
-    lo_cut->to_abap( changing cs_container = ls_struc_act ).
+    lo_cut->to_struc( changing cs_container = ls_struc_act ).
 
     ls_struc_exp-a = 'avalue'.
     ls_struc_exp-b = abap_true.
@@ -210,7 +211,7 @@ class ltcl_string_map implementation.
 
   endmethod.
 
-  method from_abap.
+  method from_struc.
 
     data ls_struc type ty_struc.
     data lo_cut type ref to zcl_abap_string_map.
@@ -224,7 +225,7 @@ class ltcl_string_map implementation.
       iv_key = 'z'
       iv_val = 'xyz' ).
 
-    lo_cut->from_abap( ls_struc ).
+    lo_cut->from_struc( ls_struc ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = 3
@@ -267,7 +268,7 @@ class ltcl_string_map implementation.
     ls_struc_exp-c = 123.
 
     try.
-      lo_cut->to_abap( changing cs_container = ls_struc_act ).
+      lo_cut->to_struc( changing cs_container = ls_struc_act ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
@@ -275,7 +276,7 @@ class ltcl_string_map implementation.
         act = lx->get_text( ) ).
     endtry.
 
-    lo_cut->strict( abap_false )->to_abap( changing cs_container = ls_struc_act ).
+    lo_cut->strict( abap_false )->to_struc( changing cs_container = ls_struc_act ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = ls_struc_exp
@@ -283,7 +284,7 @@ class ltcl_string_map implementation.
 
   endmethod.
 
-  method from_to_abap_negative.
+  method from_to_struc_negative.
 
     data lt_dummy type string_table.
     data lx type ref to cx_root.
@@ -291,7 +292,7 @@ class ltcl_string_map implementation.
     lo_cut = zcl_abap_string_map=>create( ).
 
     try.
-      lo_cut->from_abap( lt_dummy ).
+      lo_cut->from_struc( lt_dummy ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
@@ -300,13 +301,48 @@ class ltcl_string_map implementation.
     endtry.
 
     try.
-      lo_cut->to_abap( changing cs_container = lt_dummy ).
+      lo_cut->to_struc( changing cs_container = lt_dummy ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
         exp = 'Only structures supported'
         act = lx->get_text( ) ).
     endtry.
+
+  endmethod.
+
+  method from_entries.
+
+    types:
+      begin of lty_pair,
+        key type string,
+        val type string,
+      end of lty_pair.
+
+    data lt_entries type table of lty_pair.
+    data ls_entry like line of lt_entries.
+    data lo_cut type ref to zcl_abap_string_map.
+    lo_cut = zcl_abap_string_map=>create( ).
+
+    ls_entry-key = 'A'.
+    ls_entry-val = 'avalue'.
+    append ls_entry to lt_entries.
+
+    ls_entry-key = 'B'.
+    ls_entry-val = '123'.
+    append ls_entry to lt_entries.
+
+    lo_cut->from_entries( lt_entries ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 2
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = 'avalue'
+      act = lo_cut->get( 'A' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = '123'
+      act = lo_cut->get( 'B' ) ).
 
   endmethod.
 

@@ -54,12 +54,15 @@ class zcl_abap_string_map definition
       returning
         value(rt_values) type string_table .
     methods clear.
-    methods to_abap
+    methods to_struc
       changing
         !cs_container type any.
-    methods from_abap
+    methods from_struc
       importing
         !is_container type any.
+    methods from_entries
+      importing
+        !it_entries type any table.
     methods strict
       importing
         !iv_strict type abap_bool default abap_true
@@ -98,7 +101,20 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   endmethod.
 
 
-  method from_abap.
+  method from_entries.
+
+    field-symbols <i> type ty_entry.
+
+    loop at it_entries assigning <i> casting.
+      set(
+        iv_key = <i>-k
+        iv_val = <i>-v ).
+    endloop.
+
+  endmethod.
+
+
+  method from_struc.
 
     data lo_type type ref to cl_abap_typedescr.
     data lo_struc type ref to cl_abap_structdescr.
@@ -190,7 +206,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   endmethod.
 
 
-  method to_abap.
+  method to_struc.
 
     data lo_type type ref to cl_abap_typedescr.
     data lo_struc type ref to cl_abap_structdescr.
