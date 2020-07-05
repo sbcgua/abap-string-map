@@ -6,7 +6,7 @@
 String map primitive implementation for abap
 
 - install using [abapGit](https://github.com/larshp/abapGit)
-- implements `get`, `set`, `has`, `size`, `delete`, `keys`, `values`, see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap) for example
+- implements `get`, `set`, `has`, `size`, `is_empty`, `delete`
 
 ```abap
 
@@ -18,12 +18,21 @@ lo_map->set(
   iv_val = 'world' ).
 some_var = lo_map->get( 'hello' ).
 
-data lt_all_keys type string_table.
-lt_all_keys = lo_map->keys( ).
-
+lo_map->has( 'hello' ) " => abap_true
+lo_map->is_empty( )    " => abap_false
+lo_map->size( )        " => 1
 ```
 
-- also implements `to_abap`, `from_abap`
+- implements `keys`, `values`
+
+```abap
+data lt_all_keys type string_table.
+lt_all_keys = lo_map->keys( ).         " => ( 'hello' )
+
+data(lt_all_vals) = lo_map->values( ). " => ( 'world' )
+```
+
+- implements `to_struc`, `from_struc`
 
 ```abap
 data:
@@ -33,10 +42,30 @@ data:
     c type i,
   end of ls_struc.
 
-lo_map->from_abap( ls_struc ). " Converts abap structure to string map
-lo_map->to_abap( changing cs_container = ls_struc ). " Converts map to abap structure
+lo_map->from_struc( ls_struc ). " Converts abap structure to string map
+lo_map->to_struc( changing cs_container = ls_struc ). " Converts map to abap structure
 
 " If you have more data entries in the map than fields in the target structure
-lo_map->strict( abap_false )->to_abap( changing cs_container = ls_struc ).
+lo_map->strict( abap_false )->to_struc( changing cs_container = ls_struc ).
 " This skips entries which do not have a matching field
 ```
+
+- implements `from_entries` - this copies entries from a provided param. **Importantly**, the method accepts `any table` but the shape of the record **must** conform to `zcl_abap_string_map=>ty_entry`, namely it **must** have 2 string attributes for key and value respectively
+
+```abap
+types:
+  begin of ty_my_key_value,
+    key type string,
+    value type string,
+  end of ty_my_key_value.
+data lt_entries type table of ty_my_key_value.
+lt_entries = value #(
+  ( key = 'hello' value 'world' )
+  ( key = 'and' value 'another' )
+).
+lo_map->from_entries( lt_entries ).
+```
+
+For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
+
+
