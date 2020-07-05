@@ -17,6 +17,8 @@ class zcl_abap_string_map definition
     types:
       tts_entries type sorted table of ty_entry with unique key k .
 
+    data mt_entries type tts_entries read-only.
+
     class-methods create
       returning
         value(ro_instance) type ref to zcl_abap_string_map .
@@ -63,9 +65,9 @@ class zcl_abap_string_map definition
         !iv_strict type abap_bool default abap_true
       returning
         value(ro_instance) type ref to zcl_abap_string_map .
+
   protected section.
   private section.
-    data mt_entries type tts_entries.
     data mv_is_strict type abap_bool.
 ENDCLASS.
 
