@@ -38,7 +38,7 @@
     "begin_end_names": true,
     "chain_mainly_declarations": true,
     "check_abstract": true,
-    "check_comments": false,
+    "check_comments": false, // works unreliably
     "check_ddic": true,
     "check_include": true,
     "check_no_handler_pragma": true,
@@ -67,7 +67,7 @@
     },
     "constructor_visibility_public": true,
     "contains_tab": true,
-    "definitions_top": false,
+    "definitions_top": false, // non top definitions are OK !
     "description_empty": true,
     "double_space": {
       "exclude": [],
@@ -326,11 +326,11 @@
     "types_naming": {
       "exclude": [],
       "reason": "",
-      "pattern": "^(TY|T.{1,2})_.+$"
+      "pattern": "^((L)?TY|T.{1,2})_.+$"
     },
     "unknown_types": true,
     "unreachable_code": true,
-    "unused_variables": false,
+    "unused_variables": false, // temporary disabled
     "use_new": true,
     "when_others_last": true,
     "whitespace_end": true,

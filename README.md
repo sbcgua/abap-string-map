@@ -21,6 +21,13 @@ some_var = lo_map->get( 'hello' ).
 lo_map->has( 'hello' ) " => abap_true
 lo_map->is_empty( )    " => abap_false
 lo_map->size( )        " => 1
+
+" Also allows set() chaining
+lo_map->set(
+  iv_key = 'A'
+  iv_val = '1' )->set(
+  iv_key = 'B'
+  iv_val = '2' ).
 ```
 
 - implements `keys`, `values`
