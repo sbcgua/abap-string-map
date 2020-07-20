@@ -37,7 +37,9 @@ class zcl_abap_string_map definition
     methods set
       importing
         !iv_key type string
-        !iv_val type string .
+        !iv_val type string
+      returning
+        value(ro_map) type ref to zcl_abap_string_map.
     methods size
       returning
         value(rv_size) type i .
@@ -189,6 +191,8 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
       ls_entry-v = iv_val.
       insert ls_entry into table mt_entries.
     endif.
+
+    ro_map = me.
 
   endmethod.
 
