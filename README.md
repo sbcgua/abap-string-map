@@ -73,6 +73,18 @@ lt_entries = value #(
 lo_map->from_entries( lt_entries ).
 ```
 
+- may set the map immutable (read only). Guards `set`, `delete`, `clear`, `from_*` methods.
+
+```abap
+lo_map->set(
+  iv_key = 'A'
+  iv_val = '1' )->freeze( ).
+
+lo_map->set(
+  iv_key = 'A'
+  iv_val = '2' ). " raises cx_no_check
+```
+
 For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
 
 
