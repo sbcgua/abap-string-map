@@ -70,10 +70,12 @@ class zcl_abap_string_map definition
         !iv_strict type abap_bool default abap_true
       returning
         value(ro_instance) type ref to zcl_abap_string_map .
+    methods freeze.
 
   protected section.
   private section.
     data mv_is_strict type abap_bool.
+    data mv_read_only type abap_bool.
 ENDCLASS.
 
 
@@ -82,7 +84,13 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
 
   method clear.
+
+    if mv_read_only = abap_true.
+      lcx_error=>raise( 'String map is read only' ).
+    endif.
+
     clear mt_entries.
+
   endmethod.
 
 
@@ -98,14 +106,27 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method delete.
 
+    if mv_read_only = abap_true.
+      lcx_error=>raise( 'String map is read only' ).
+    endif.
+
     delete mt_entries where k = iv_key.
 
+  endmethod.
+
+
+  method freeze.
+    mv_read_only = abap_true.
   endmethod.
 
 
   method from_entries.
 
     field-symbols <i> type ty_entry.
+
+    if mv_read_only = abap_true.
+      lcx_error=>raise( 'String map is read only' ).
+    endif.
 
     loop at it_entries assigning <i> casting.
       set(
@@ -122,6 +143,10 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     data lo_struc type ref to cl_abap_structdescr.
     field-symbols <c> like line of lo_struc->components.
     field-symbols <val> type any.
+
+    if mv_read_only = abap_true.
+      lcx_error=>raise( 'String map is read only' ).
+    endif.
 
     clear mt_entries.
 
@@ -182,6 +207,10 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
     data ls_entry like line of mt_entries.
     field-symbols <entry> like line of mt_entries.
+
+    if mv_read_only = abap_true.
+      lcx_error=>raise( 'String map is read only' ).
+    endif.
 
     read table mt_entries assigning <entry> with key k = iv_key.
     if sy-subrc = 0.

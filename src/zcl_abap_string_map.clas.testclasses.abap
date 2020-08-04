@@ -22,10 +22,83 @@ class ltcl_string_map definition
     methods strict for testing.
     methods from_to_struc_negative for testing.
     methods from_entries for testing.
+    methods freeze for testing.
 
 endclass.
 
 class ltcl_string_map implementation.
+
+  method freeze.
+
+    data lx type ref to cx_root.
+    data lo_cut type ref to zcl_abap_string_map.
+    lo_cut = zcl_abap_string_map=>create( ).
+
+    lo_cut->set(
+      iv_key = 'A'
+      iv_val = 'avalue' )->freeze( ).
+
+    try.
+      lo_cut->set(
+        iv_key = 'A'
+        iv_val = '2' ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
+    try.
+      lo_cut->set(
+        iv_key = 'B'
+        iv_val = '2' ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
+    try.
+      lo_cut->delete( 'A' ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
+    try.
+      lo_cut->clear( ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
+    data lt_entries type zcl_abap_string_map=>tty_entries.
+    try.
+      lo_cut->from_entries( lt_entries ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
+    data ls_dummy type syst.
+    try.
+      lo_cut->from_struc( ls_dummy ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
+  endmethod.
 
   method get_set_has.
 
