@@ -5,7 +5,7 @@ class zcl_abap_string_map definition
 
   public section.
 
-    constants version type string value 'v1.0.1'.
+    constants version type string value 'v1.0.2'.
 
     types:
       begin of ty_entry,
