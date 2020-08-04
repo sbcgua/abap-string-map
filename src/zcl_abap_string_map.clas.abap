@@ -20,9 +20,13 @@ class zcl_abap_string_map definition
     data mt_entries type tts_entries read-only.
 
     class-methods create
+      importing
+        !iv_from type any optional
       returning
         value(ro_instance) type ref to zcl_abap_string_map .
-    methods constructor.
+    methods constructor
+      importing
+        !iv_from type any optional.
 
     methods get
       importing
@@ -96,11 +100,37 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method constructor.
     mv_is_strict = abap_true.
+
+    if iv_from is not initial.
+      data lo_type type ref to cl_abap_typedescr.
+      lo_type = cl_abap_typedescr=>describe_by_data( iv_from ).
+
+      case lo_type->type_kind.
+        when cl_abap_typedescr=>typekind_struct1 or cl_abap_typedescr=>typekind_struct2.
+          me->from_struc( iv_from ).
+
+        when cl_abap_typedescr=>typekind_oref.
+          data lo_from type ref to zcl_abap_string_map.
+          try.
+            lo_from ?= iv_from.
+          catch cx_sy_move_cast_error.
+            lcx_error=>raise( 'Incorrect string map instance to copy from' ).
+          endtry.
+          me->mt_entries = lo_from->mt_entries.
+
+        when cl_abap_typedescr=>typekind_table.
+          me->from_entries( iv_from ).
+
+        when others.
+          lcx_error=>raise( |Incorrect input for string_map=>create, typekind { lo_type->type_kind }| ).
+      endcase.
+    endif.
+
   endmethod.
 
 
   method create.
-    create object ro_instance.
+    create object ro_instance exporting iv_from = iv_from.
   endmethod.
 
 

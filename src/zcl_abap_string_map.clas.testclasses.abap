@@ -23,10 +23,70 @@ class ltcl_string_map definition
     methods from_to_struc_negative for testing.
     methods from_entries for testing.
     methods freeze for testing.
+    methods create_from for testing.
 
 endclass.
 
 class ltcl_string_map implementation.
+
+  method create_from.
+
+    data lx type ref to cx_root.
+    data lo_src type ref to zcl_abap_string_map.
+    data lo_cut type ref to zcl_abap_string_map.
+
+    lo_src = zcl_abap_string_map=>create( ).
+    lo_src->set(
+      iv_key = 'A'
+      iv_val = '1' ).
+
+    try.
+      zcl_abap_string_map=>create( `abc` ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'Incorrect input for string_map=>create, typekind g'
+        act = lx->get_text( ) ).
+    endtry.
+
+    try.
+      zcl_abap_string_map=>create( me ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'Incorrect string map instance to copy from'
+        act = lx->get_text( ) ).
+    endtry.
+
+    " From obj
+    lo_cut = zcl_abap_string_map=>create( lo_src ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = 1
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = '1'
+      act = lo_cut->get( 'A' ) ).
+
+    " From tab
+    lo_cut = zcl_abap_string_map=>create( lo_src->mt_entries ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = 1
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = '1'
+      act = lo_cut->get( 'A' ) ).
+
+    " From struc
+    data: begin of ls_dummy, a type string value '1', end of ls_dummy.
+    lo_cut = zcl_abap_string_map=>create( ls_dummy ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = 1
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = '1'
+      act = lo_cut->get( 'A' ) ).
+
+  endmethod.
 
   method freeze.
 
