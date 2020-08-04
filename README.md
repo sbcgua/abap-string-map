@@ -85,6 +85,14 @@ lo_map->set(
   iv_val = '2' ). " raises cx_no_check
 ```
 
+- `create` also supports immediate initiation from another instance of string map, a structure (same as running `from_struc` after) or a table (same as running `from_entries` after)
+
+```abap
+lo_copy = zcl_abap_string_map=>create( lo_map ).
+lo_copy = zcl_abap_string_map=>create( ls_struc ). " see examples above
+lo_copy = zcl_abap_string_map=>create( lt_entries ). " see examples above
+```
+
 For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
 
 
