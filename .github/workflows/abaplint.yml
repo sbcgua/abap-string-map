@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v1
       - uses: actions/checkout@v2
-      - name: Run abaplint # @2.36.9 ?
+      - name: Run abaplint # @2.38.16 ?
         run: |
           npm -g install @abaplint/cli
           abaplint

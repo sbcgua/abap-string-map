@@ -148,6 +148,7 @@
       "ignoreGlobalClassDefinition": false,
       "ignoreGlobalInterface": false,
       "ignoreFunctionModuleName": false,
+      "ignoreGlobalClassBoundaries": true,
       "ignoreKeywords": []
     },
     "line_break_multiple_parameters": true,
@@ -279,7 +280,7 @@
     "prefix_is_current_class": {
       "exclude": [],
       "reason": "",
-      "omitMeInstanceCalls": true
+      "omitMeInstanceCalls": false
     },
     "release_idoc": true,
     "remove_descriptions": {
