@@ -101,3 +101,6 @@ lo_copy = zcl_abap_string_map=>create( lt_entries ). " see examples above
 ```
 
 For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
+
+### Blog posts
+- https://blogs.sap.com/2020/08/04/bicycles.-1-string-map/
