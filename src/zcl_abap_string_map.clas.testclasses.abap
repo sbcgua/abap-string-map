@@ -24,6 +24,7 @@ class ltcl_string_map definition
     methods from_entries for testing.
     methods freeze for testing.
     methods create_from for testing.
+    methods case_insensitive for testing.
 
 endclass.
 
@@ -41,7 +42,7 @@ class ltcl_string_map implementation.
       iv_val = '1' ).
 
     try.
-      zcl_abap_string_map=>create( `abc` ).
+      zcl_abap_string_map=>create( iv_from = `abc` ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
@@ -50,7 +51,7 @@ class ltcl_string_map implementation.
     endtry.
 
     try.
-      zcl_abap_string_map=>create( me ).
+      zcl_abap_string_map=>create( iv_from = me ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
@@ -59,7 +60,7 @@ class ltcl_string_map implementation.
     endtry.
 
     " From obj
-    lo_cut = zcl_abap_string_map=>create( lo_src ).
+    lo_cut = zcl_abap_string_map=>create( iv_from = lo_src ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
       act = lo_cut->size( ) ).
@@ -68,7 +69,7 @@ class ltcl_string_map implementation.
       act = lo_cut->get( 'A' ) ).
 
     " From tab
-    lo_cut = zcl_abap_string_map=>create( lo_src->mt_entries ).
+    lo_cut = zcl_abap_string_map=>create( iv_from = lo_src->mt_entries ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
       act = lo_cut->size( ) ).
@@ -78,7 +79,7 @@ class ltcl_string_map implementation.
 
     " From struc
     data: begin of ls_dummy, a type string value '1', end of ls_dummy.
-    lo_cut = zcl_abap_string_map=>create( ls_dummy ).
+    lo_cut = zcl_abap_string_map=>create( iv_from = ls_dummy ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
       act = lo_cut->size( ) ).
@@ -476,6 +477,44 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       exp = '123'
       act = lo_cut->get( 'B' ) ).
+
+  endmethod.
+
+  method case_insensitive.
+
+    data lo_cut type ref to zcl_abap_string_map.
+    lo_cut = zcl_abap_string_map=>create( iv_case_insensitive = abap_true ).
+
+    lo_cut->set(
+      iv_key = 'A'
+      iv_val = 'avalue' ).
+    lo_cut->set(
+      iv_key = 'b'
+      iv_val = 'bvalue' ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 'avalue'
+      act = lo_cut->get( 'A' ) ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 'avalue'
+      act = lo_cut->get( 'a' ) ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 'bvalue'
+      act = lo_cut->get( 'B' ) ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 'bvalue'
+      act = lo_cut->get( 'b' ) ).
+
+    data lt_exp_keys type string_table.
+    append 'A' to lt_exp_keys.
+    append 'B' to lt_exp_keys.
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = lt_exp_keys
+      act = lo_cut->keys( ) ).
 
   endmethod.
 

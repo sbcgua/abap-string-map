@@ -21,11 +21,13 @@ class zcl_abap_string_map definition
 
     class-methods create
       importing
+        !iv_case_insensitive type abap_bool default abap_false
         !iv_from type any optional
       returning
         value(ro_instance) type ref to zcl_abap_string_map .
     methods constructor
       importing
+        !iv_case_insensitive type abap_bool default abap_false
         !iv_from type any optional.
 
     methods get
@@ -80,6 +82,7 @@ class zcl_abap_string_map definition
   private section.
     data mv_is_strict type abap_bool.
     data mv_read_only type abap_bool.
+    data mv_case_insensitive type abap_bool.
 ENDCLASS.
 
 
@@ -100,6 +103,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method constructor.
     mv_is_strict = abap_true.
+    mv_case_insensitive = iv_case_insensitive.
 
     if iv_from is not initial.
       data lo_type type ref to cl_abap_typedescr.
@@ -130,7 +134,10 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
 
   method create.
-    create object ro_instance exporting iv_from = iv_from.
+    create object ro_instance
+      exporting
+        iv_case_insensitive = iv_case_insensitive
+        iv_from = iv_from.
   endmethod.
 
 
@@ -201,8 +208,16 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method get.
 
+    data lv_key like iv_key.
     field-symbols <entry> like line of mt_entries.
-    read table mt_entries assigning <entry> with key k = iv_key.
+
+    if mv_case_insensitive = abap_true.
+      lv_key = to_upper( iv_key ).
+    else.
+      lv_key = iv_key.
+    endif.
+
+    read table mt_entries assigning <entry> with key k = lv_key.
     if sy-subrc = 0.
       rv_val = <entry>-v.
     endif.
@@ -236,17 +251,24 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method set.
 
     data ls_entry like line of mt_entries.
+    data lv_key like iv_key.
     field-symbols <entry> like line of mt_entries.
 
     if mv_read_only = abap_true.
       lcx_error=>raise( 'String map is read only' ).
     endif.
 
-    read table mt_entries assigning <entry> with key k = iv_key.
+    if mv_case_insensitive = abap_true.
+      lv_key = to_upper( iv_key ).
+    else.
+      lv_key = iv_key.
+    endif.
+
+    read table mt_entries assigning <entry> with key k = lv_key.
     if sy-subrc = 0.
       <entry>-v = iv_val.
     else.
-      ls_entry-k = iv_key.
+      ls_entry-k = lv_key.
       ls_entry-v = iv_val.
       insert ls_entry into table mt_entries.
     endif.
