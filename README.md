@@ -3,6 +3,13 @@
 
 # Abap string map
 
+    *** IMPORTANT ***
+    This branch (OSNPOC) is dedicated to Open source namespaces proof of concept described here:
+      https://github.com/abapGit/abapGit/issues/4592
+    The class name below should be chaged to /osnpoc/cl_string_map
+    The rest is identical
+    ******************
+
 String map primitive implementation for abap
 
 - install using [abapGit](https://github.com/larshp/abapGit)
