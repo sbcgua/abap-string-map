@@ -33,16 +33,16 @@ class ltcl_string_map implementation.
   method create_from.
 
     data lx type ref to cx_root.
-    data lo_src type ref to zcl_abap_string_map.
-    data lo_cut type ref to zcl_abap_string_map.
+    data lo_src type ref to /osnpoc/cl_string_map.
+    data lo_cut type ref to /osnpoc/cl_string_map.
 
-    lo_src = zcl_abap_string_map=>create( ).
+    lo_src = /osnpoc/cl_string_map=>create( ).
     lo_src->set(
       iv_key = 'A'
       iv_val = '1' ).
 
     try.
-      zcl_abap_string_map=>create( iv_from = `abc` ).
+      /osnpoc/cl_string_map=>create( iv_from = `abc` ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
@@ -51,7 +51,7 @@ class ltcl_string_map implementation.
     endtry.
 
     try.
-      zcl_abap_string_map=>create( iv_from = me ).
+      /osnpoc/cl_string_map=>create( iv_from = me ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
@@ -60,7 +60,7 @@ class ltcl_string_map implementation.
     endtry.
 
     " From obj
-    lo_cut = zcl_abap_string_map=>create( iv_from = lo_src ).
+    lo_cut = /osnpoc/cl_string_map=>create( iv_from = lo_src ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
       act = lo_cut->size( ) ).
@@ -69,7 +69,7 @@ class ltcl_string_map implementation.
       act = lo_cut->get( 'A' ) ).
 
     " From tab
-    lo_cut = zcl_abap_string_map=>create( iv_from = lo_src->mt_entries ).
+    lo_cut = /osnpoc/cl_string_map=>create( iv_from = lo_src->mt_entries ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
       act = lo_cut->size( ) ).
@@ -79,7 +79,7 @@ class ltcl_string_map implementation.
 
     " From struc
     data: begin of ls_dummy, a type string value '1', end of ls_dummy.
-    lo_cut = zcl_abap_string_map=>create( iv_from = ls_dummy ).
+    lo_cut = /osnpoc/cl_string_map=>create( iv_from = ls_dummy ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
       act = lo_cut->size( ) ).
@@ -92,8 +92,8 @@ class ltcl_string_map implementation.
   method freeze.
 
     data lx type ref to cx_root.
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     lo_cut->set(
       iv_key = 'A'
@@ -139,7 +139,7 @@ class ltcl_string_map implementation.
         act = lx->get_text( ) ).
     endtry.
 
-    data lt_entries type zcl_abap_string_map=>tty_entries.
+    data lt_entries type /osnpoc/cl_string_map=>tty_entries.
     try.
       lo_cut->from_entries( lt_entries ).
       cl_abap_unit_assert=>fail( ).
@@ -163,8 +163,8 @@ class ltcl_string_map implementation.
 
   method get_set_has.
 
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     lo_cut->set(
       iv_key = 'A'
@@ -205,8 +205,8 @@ class ltcl_string_map implementation.
 
   method size_empty_clear.
 
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = 0
@@ -258,8 +258,8 @@ class ltcl_string_map implementation.
 
   method delete.
 
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     lo_cut->set(
       iv_key = 'A'
@@ -287,9 +287,9 @@ class ltcl_string_map implementation.
 
   method keys_values.
 
-    data lo_cut type ref to zcl_abap_string_map.
+    data lo_cut type ref to /osnpoc/cl_string_map.
     data lt_exp type string_table.
-    lo_cut = zcl_abap_string_map=>create( ).
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     lo_cut->set(
       iv_key = 'A'
@@ -320,8 +320,8 @@ class ltcl_string_map implementation.
 
     data ls_struc_act type ty_struc.
     data ls_struc_exp type ty_struc.
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     lo_cut->set(
       iv_key = 'a'
@@ -348,8 +348,8 @@ class ltcl_string_map implementation.
   method from_struc.
 
     data ls_struc type ty_struc.
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     ls_struc-a = 'avalue'.
     ls_struc-b = abap_true.
@@ -381,8 +381,8 @@ class ltcl_string_map implementation.
     data ls_struc_act type ty_struc.
     data ls_struc_exp type ty_struc.
     data lx type ref to cx_root.
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     lo_cut->set(
       iv_key = 'a'
@@ -422,8 +422,8 @@ class ltcl_string_map implementation.
 
     data lt_dummy type string_table.
     data lx type ref to cx_root.
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     try.
       lo_cut->from_struc( lt_dummy ).
@@ -455,8 +455,8 @@ class ltcl_string_map implementation.
 
     data lt_entries type table of lty_pair.
     data ls_entry like line of lt_entries.
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( ).
 
     ls_entry-key = 'A'.
     ls_entry-val = 'avalue'.
@@ -482,8 +482,8 @@ class ltcl_string_map implementation.
 
   method case_insensitive.
 
-    data lo_cut type ref to zcl_abap_string_map.
-    lo_cut = zcl_abap_string_map=>create( iv_case_insensitive = abap_true ).
+    data lo_cut type ref to /osnpoc/cl_string_map.
+    lo_cut = /osnpoc/cl_string_map=>create( iv_case_insensitive = abap_true ).
 
     lo_cut->set(
       iv_key = 'A'

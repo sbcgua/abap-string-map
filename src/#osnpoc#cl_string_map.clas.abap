@@ -1,51 +1,49 @@
-class zcl_abap_string_map definition
+class /osnpoc/cl_string_map definition
   public
   final
   create public .
 
   public section.
 
-    constants version type string value 'v1.0.2'.
-
     types:
       begin of ty_entry,
-          k type string,
-          v type string,
-        end of ty_entry .
+        k type string,
+        v type string,
+      end of ty_entry .
     types:
       tty_entries type standard table of ty_entry with key k .
     types:
       tts_entries type sorted table of ty_entry with unique key k .
 
-    data mt_entries type tts_entries read-only.
+    constants version type string value 'v1.0.2' ##NO_TEXT.
+    data mt_entries type tts_entries read-only .
 
     class-methods create
       importing
         !iv_case_insensitive type abap_bool default abap_false
-        !iv_from type any optional
+        !iv_from             type any optional
       returning
-        value(ro_instance) type ref to zcl_abap_string_map .
+        value(ro_instance)   type ref to /osnpoc/cl_string_map .
     methods constructor
       importing
         !iv_case_insensitive type abap_bool default abap_false
-        !iv_from type any optional.
-
+        !iv_from             type any optional .
     methods get
       importing
-        !iv_key type string
+        !iv_key       type string
       returning
         value(rv_val) type string .
     methods has
       importing
-        !iv_key type string
+        !iv_key       type string
       returning
         value(rv_has) type abap_bool .
     methods set
       importing
-        !iv_key type string
-        !iv_val type string
+        !iv_key       type string
+        !iv_val       type string
       returning
-        value(ro_map) type ref to zcl_abap_string_map.
+        value(ro_map) type ref to /osnpoc/cl_string_map .
     methods size
       returning
         value(rv_size) type i .
@@ -61,23 +59,22 @@ class zcl_abap_string_map definition
     methods values
       returning
         value(rt_values) type string_table .
-    methods clear.
+    methods clear .
     methods to_struc
       changing
-        !cs_container type any.
+        !cs_container type any .
     methods from_struc
       importing
-        !is_container type any.
+        !is_container type any .
     methods from_entries
       importing
-        !it_entries type any table.
+        !it_entries type any table .
     methods strict
       importing
-        !iv_strict type abap_bool default abap_true
+        !iv_strict         type abap_bool default abap_true
       returning
-        value(ro_instance) type ref to zcl_abap_string_map .
-    methods freeze.
-
+        value(ro_instance) type ref to /osnpoc/cl_string_map .
+    methods freeze .
   protected section.
   private section.
     data mv_is_strict type abap_bool.
@@ -87,7 +84,7 @@ ENDCLASS.
 
 
 
-CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
+CLASS /OSNPOC/CL_STRING_MAP IMPLEMENTATION.
 
 
   method clear.
@@ -114,11 +111,11 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
           me->from_struc( iv_from ).
 
         when cl_abap_typedescr=>typekind_oref.
-          data lo_from type ref to zcl_abap_string_map.
+          data lo_from type ref to /osnpoc/cl_string_map.
           try.
-            lo_from ?= iv_from.
-          catch cx_sy_move_cast_error.
-            lcx_error=>raise( 'Incorrect string map instance to copy from' ).
+              lo_from ?= iv_from.
+            catch cx_sy_move_cast_error.
+              lcx_error=>raise( 'Incorrect string map instance to copy from' ).
           endtry.
           me->mt_entries = lo_from->mt_entries.
 
@@ -137,7 +134,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     create object ro_instance
       exporting
         iv_case_insensitive = iv_case_insensitive
-        iv_from = iv_from.
+        iv_from             = iv_from.
   endmethod.
 
 

@@ -3,7 +3,7 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>ZCL_ABAP_STRING_MAP</CLSNAME>
+    <CLSNAME>/OSNPOC/CL_STRING_MAP</CLSNAME>
     <LANGU>E</LANGU>
     <DESCRIPT>ABAP string map implementation</DESCRIPT>
     <STATE>1</STATE>
