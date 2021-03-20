@@ -27,6 +27,7 @@ class ltcl_string_map definition
     methods case_insensitive for testing.
     methods set_clike for testing.
     methods from_string for testing.
+    methods to_string for testing.
 
 endclass.
 
@@ -621,6 +622,18 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get( 'x' )
       exp = 'y' ).
+
+  endmethod.
+
+  method to_string.
+
+    data lo_cut type ref to zcl_abap_string_map.
+    lo_cut = zcl_abap_string_map=>create( ).
+
+    lo_cut->from_string( 'a = avalue, b = some data, c = space   space' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->to_string( )
+      exp = 'a=avalue,b=some data,c=space   space' ).
 
   endmethod.
 

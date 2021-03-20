@@ -74,6 +74,9 @@ class zcl_abap_string_map definition
     methods from_string
       importing
         !iv_string_params type csequence.
+    methods to_string
+      returning
+        value(rv_string) type string.
     methods strict
       importing
         !iv_strict type abap_bool default abap_true
@@ -340,6 +343,22 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method strict.
     mv_is_strict = iv_strict.
     ro_instance = me.
+  endmethod.
+
+
+  method to_string.
+
+    data lv_size type i.
+    field-symbols <entry> like line of mt_entries.
+
+    lv_size = lines( mt_entries ).
+    loop at mt_entries assigning <entry>.
+      rv_string = rv_string && <entry>-k && '=' && <entry>-v.
+      if sy-tabix < lv_size.
+        rv_string = rv_string && ','.
+      endif.
+    endloop.
+
   endmethod.
 
 
