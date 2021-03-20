@@ -83,11 +83,12 @@ lt_entries = value #(
 lo_map->from_entries( lt_entries ).
 ```
 
-- implements `from_string` - this parses string of pairs like `a = b, x = y` into map. Spaces are condensed.
+- implements `from_string` - this parses string of pairs like `a = b, x = y` into map. Spaces are condensed. `to_string` renders in string representation (careful with case insensitive - keys will be upper-cased).
 
 ```abap
 lo_map->from_string( 'a = b, x = y' ).
 lo_map->get( 'a' ). " => 'b'
+lo_map->to_string( ). " => 'a=b,x=y'
 ```
 
 - may set the map immutable (read only). Guards `set`, `delete`, `clear`, `from_*` methods.
