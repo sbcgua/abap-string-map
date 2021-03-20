@@ -590,17 +590,20 @@ class ltcl_string_map implementation.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
-    lo_cut->from_string( 'a = avalue, b = some data' ).
+    lo_cut->from_string( 'a = avalue, b = some data, c = space   space' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->size( )
-      exp = 2 ).
+      exp = 3 ).
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get( 'a' )
       exp = 'avalue' ).
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get( 'b' )
       exp = 'some data' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'c' )
+      exp = 'space   space' ).
 
     data lx type ref to lcx_error.
     try.

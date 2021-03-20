@@ -202,7 +202,10 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     data lv_val type string.
     loop at lt_lines assigning <i>.
       split <i> at '=' into lv_key lv_val.
-      condense: lv_key, lv_val.
+      shift lv_key right deleting trailing space.
+      shift lv_key left deleting leading space.
+      shift lv_val right deleting trailing space.
+      shift lv_val left deleting leading space.
       if lv_key is initial.
         lcx_error=>raise( 'Empty key in initialization string is not allowed' ).
         " value can be initial, even a,b,c is ok to create sets
