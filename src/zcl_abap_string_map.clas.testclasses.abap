@@ -25,6 +25,7 @@ class ltcl_string_map definition
     methods freeze for testing.
     methods create_from for testing.
     methods case_insensitive for testing.
+    methods set_clike for testing.
 
 endclass.
 
@@ -535,6 +536,42 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       exp = 0
       act = lo_cut->size( ) ).
+
+  endmethod.
+
+  method set_clike.
+
+    data lo_cut type ref to zcl_abap_string_map.
+    lo_cut = zcl_abap_string_map=>create( ).
+
+    lo_cut->set(
+      iv_key = 'A'
+      iv_val = 'avalue' ).
+    lo_cut->set(
+      iv_key = `B`
+      iv_val = `bvalue` ).
+
+    data lv_char type c length 10.
+    lv_char = 'C'.
+    lo_cut->set(
+      iv_key = lv_char
+      iv_val = lv_char ).
+
+    data lv_numc type n length 4.
+    lv_numc = '123'.
+    lo_cut->set(
+      iv_key = lv_numc
+      iv_val = lv_numc ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 4
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = 'C'
+      act = lo_cut->get( 'C' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = '0123'
+      act = lo_cut->get( '0123' ) ).
 
   endmethod.
 

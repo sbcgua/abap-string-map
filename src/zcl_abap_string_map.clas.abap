@@ -32,18 +32,18 @@ class zcl_abap_string_map definition
 
     methods get
       importing
-        !iv_key type string
+        !iv_key type clike
       returning
         value(rv_val) type string .
     methods has
       importing
-        !iv_key type string
+        !iv_key type clike
       returning
         value(rv_has) type abap_bool .
     methods set
       importing
-        !iv_key type string
-        !iv_val type string
+        !iv_key type clike
+        !iv_val type clike
       returning
         value(ro_map) type ref to zcl_abap_string_map.
     methods size
@@ -54,7 +54,7 @@ class zcl_abap_string_map definition
         value(rv_yes) type abap_bool .
     methods delete
       importing
-        !iv_key type string .
+        !iv_key type clike .
     methods keys
       returning
         value(rt_keys) type string_table .
