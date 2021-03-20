@@ -26,6 +26,7 @@ class ltcl_string_map definition
     methods create_from for testing.
     methods case_insensitive for testing.
     methods set_clike for testing.
+    methods from_string for testing.
 
 endclass.
 
@@ -43,11 +44,11 @@ class ltcl_string_map implementation.
       iv_val = '1' ).
 
     try.
-      zcl_abap_string_map=>create( iv_from = `abc` ).
+      zcl_abap_string_map=>create( iv_from = 12345 ).
       cl_abap_unit_assert=>fail( ).
     catch cx_root into lx.
       cl_abap_unit_assert=>assert_equals(
-        exp = 'Incorrect input for string_map=>create, typekind g'
+        exp = 'Incorrect input for string_map=>create, typekind I'
         act = lx->get_text( ) ).
     endtry.
 
@@ -572,6 +573,42 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       exp = '0123'
       act = lo_cut->get( '0123' ) ).
+
+  endmethod.
+
+  method from_string.
+
+    data lo_cut type ref to zcl_abap_string_map.
+    lo_cut = zcl_abap_string_map=>create( ).
+
+    lo_cut->from_string( 'a = avalue, b = some data' ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->size( )
+      exp = 2 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'a' )
+      exp = 'avalue' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'b' )
+      exp = 'some data' ).
+
+    data lx type ref to lcx_error.
+    try.
+      lo_cut->from_string( `x=y,  ` ).
+    catch lcx_error into lx.
+      cl_abap_unit_assert=>assert_char_cp(
+        act = lx->get_text( )
+        exp = 'Empty key*' ).
+    endtry.
+
+    lo_cut = zcl_abap_string_map=>create( iv_from = 'x=y' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->size( )
+      exp = 1 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'x' )
+      exp = 'y' ).
 
   endmethod.
 
