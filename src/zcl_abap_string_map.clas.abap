@@ -147,7 +147,15 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
       lcx_error=>raise( 'String map is read only' ).
     endif.
 
-    delete mt_entries where k = iv_key.
+    data lv_key type string.
+
+    if mv_case_insensitive = abap_true.
+      lv_key = to_upper( iv_key ).
+    else.
+      lv_key = iv_key.
+    endif.
+
+    delete mt_entries where k = lv_key.
 
   endmethod.
 
@@ -208,7 +216,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method get.
 
-    data lv_key like iv_key.
+    data lv_key type string.
     field-symbols <entry> like line of mt_entries.
 
     if mv_case_insensitive = abap_true.
@@ -227,7 +235,15 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
   method has.
 
-    read table mt_entries transporting no fields with key k = iv_key.
+    data lv_key type string.
+
+    if mv_case_insensitive = abap_true.
+      lv_key = to_upper( iv_key ).
+    else.
+      lv_key = iv_key.
+    endif.
+
+    read table mt_entries transporting no fields with key k = lv_key.
     rv_has = boolc( sy-subrc = 0 ).
 
   endmethod.
@@ -251,7 +267,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method set.
 
     data ls_entry like line of mt_entries.
-    data lv_key like iv_key.
+    data lv_key type string.
     field-symbols <entry> like line of mt_entries.
 
     if mv_read_only = abap_true.
