@@ -161,6 +161,15 @@ class ltcl_string_map implementation.
         act = lx->get_text( ) ).
     endtry.
 
+    try.
+      lo_cut->from_string( 'x=y' ).
+      cl_abap_unit_assert=>fail( ).
+    catch cx_root into lx.
+      cl_abap_unit_assert=>assert_equals(
+        exp = 'String map is read only'
+        act = lx->get_text( ) ).
+    endtry.
+
   endmethod.
 
   method get_set_has.
