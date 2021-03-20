@@ -9,9 +9,9 @@ class zcl_abap_string_map definition
 
     types:
       begin of ty_entry,
-          k type string,
-          v type string,
-        end of ty_entry .
+        k type string,
+        v type string,
+      end of ty_entry .
     types:
       tty_entries type standard table of ty_entry with key k .
     types:
