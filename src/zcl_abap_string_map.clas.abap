@@ -9,9 +9,9 @@ class zcl_abap_string_map definition
 
     types:
       begin of ty_entry,
-          k type string,
-          v type string,
-        end of ty_entry .
+        k type string,
+        v type string,
+      end of ty_entry .
     types:
       tty_entries type standard table of ty_entry with key k .
     types:
@@ -32,18 +32,18 @@ class zcl_abap_string_map definition
 
     methods get
       importing
-        !iv_key type string
+        !iv_key type clike
       returning
         value(rv_val) type string .
     methods has
       importing
-        !iv_key type string
+        !iv_key type clike
       returning
         value(rv_has) type abap_bool .
     methods set
       importing
-        !iv_key type string
-        !iv_val type string
+        !iv_key type clike
+        !iv_val type clike
       returning
         value(ro_map) type ref to zcl_abap_string_map.
     methods size
@@ -54,7 +54,7 @@ class zcl_abap_string_map definition
         value(rv_yes) type abap_bool .
     methods delete
       importing
-        !iv_key type string .
+        !iv_key type clike .
     methods keys
       returning
         value(rt_keys) type string_table .
@@ -71,6 +71,12 @@ class zcl_abap_string_map definition
     methods from_entries
       importing
         !it_entries type any table.
+    methods from_string
+      importing
+        !iv_string_params type csequence.
+    methods to_string
+      returning
+        value(rv_string) type string.
     methods strict
       importing
         !iv_strict type abap_bool default abap_true
@@ -125,6 +131,9 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
         when cl_abap_typedescr=>typekind_table.
           me->from_entries( iv_from ).
 
+        when cl_abap_typedescr=>typekind_string or cl_abap_typedescr=>typekind_char.
+          me->from_string( iv_from ).
+
         when others.
           lcx_error=>raise( |Incorrect input for string_map=>create, typekind { lo_type->type_kind }| ).
       endcase.
@@ -177,6 +186,36 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
       set(
         iv_key = <i>-k
         iv_val = <i>-v ).
+    endloop.
+
+  endmethod.
+
+
+  method from_string.
+
+    if iv_string_params is initial.
+      return.
+    endif.
+
+    data lt_lines type string_table.
+    field-symbols <i> like line of lt_lines.
+    split iv_string_params at ',' into table lt_lines.
+
+    data lv_key type string.
+    data lv_val type string.
+    loop at lt_lines assigning <i>.
+      split <i> at '=' into lv_key lv_val.
+      shift lv_key right deleting trailing space.
+      shift lv_key left deleting leading space.
+      shift lv_val right deleting trailing space.
+      shift lv_val left deleting leading space.
+      if lv_key is initial.
+        lcx_error=>raise( 'Empty key in initialization string is not allowed' ).
+        " value can be initial, even a,b,c is ok to create sets
+      endif.
+      set(
+        iv_key = lv_key
+        iv_val = lv_val ).
     endloop.
 
   endmethod.
@@ -304,6 +343,22 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method strict.
     mv_is_strict = iv_strict.
     ro_instance = me.
+  endmethod.
+
+
+  method to_string.
+
+    data lv_size type i.
+    field-symbols <entry> like line of mt_entries.
+
+    lv_size = lines( mt_entries ).
+    loop at mt_entries assigning <entry>.
+      rv_string = rv_string && <entry>-k && '=' && <entry>-v.
+      if sy-tabix < lv_size.
+        rv_string = rv_string && ','.
+      endif.
+    endloop.
+
   endmethod.
 
 

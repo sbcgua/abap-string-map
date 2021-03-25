@@ -8,11 +8,13 @@ String map primitive implementation for abap
 - install using [abapGit](https://github.com/larshp/abapGit)
 - errors, if happen, are raised via `cx_no_check` (with get_text)
 - implements `get`, `set`, `has`, `size`, `is_empty`, `delete`
+- also convenience features to create map from string, table or structure (key/value)
 
 ```abap
 data lo_map type ref to zcl_abap_string_map.
 lo_map = zcl_abap_string_map=>create( ). " or create object ...
 
+" Key and value can be a string or of C or N types (so `clike`)
 lo_map->set(
   iv_key = 'hello'
   iv_val = 'world' ).
@@ -30,7 +32,8 @@ lo_map->clear( ).
 ```abap
 lo_map->set(
   iv_key = 'A'
-  iv_val = '1' )->set(
+  iv_val = '1' 
+)->set(
   iv_key = 'B'
   iv_val = '2' ).
 ```
@@ -80,6 +83,14 @@ lt_entries = value #(
 lo_map->from_entries( lt_entries ).
 ```
 
+- implements `from_string` - this parses string of pairs like `a = b, x = y` into map. Spaces are condensed. `to_string` renders in string representation (careful with case insensitive - keys will be upper-cased).
+
+```abap
+lo_map->from_string( 'a = b, x = y' ).
+lo_map->get( 'a' ). " => 'b'
+lo_map->to_string( ). " => 'a=b,x=y'
+```
+
 - may set the map immutable (read only). Guards `set`, `delete`, `clear`, `from_*` methods.
 
 ```abap
@@ -98,6 +109,7 @@ lo_map->set(
 lo_copy = zcl_abap_string_map=>create( lo_map ).
 lo_copy = zcl_abap_string_map=>create( ls_struc ).   " see examples above
 lo_copy = zcl_abap_string_map=>create( lt_entries ). " see examples above
+lo_copy = zcl_abap_string_map=>create( 'a=b, x=y' ). " see examples above
 ```
 
 For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
