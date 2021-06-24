@@ -35,9 +35,10 @@ class ltcl_string_map implementation.
 
   method create_from.
 
-    data lx type ref to cx_root.
+    data lx_e type ref to cx_root.
     data lo_src type ref to zcl_abap_string_map.
     data lo_cut type ref to zcl_abap_string_map.
+    data: begin of ls_dummy, a type string value '1', end of ls_dummy.
 
     lo_src = zcl_abap_string_map=>create( ).
     lo_src->set(
@@ -47,19 +48,19 @@ class ltcl_string_map implementation.
     try.
       zcl_abap_string_map=>create( iv_from = 12345 ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'Incorrect input for string_map=>create, typekind I'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     try.
       zcl_abap_string_map=>create( iv_from = me ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'Incorrect string map instance to copy from'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     " From obj
@@ -81,7 +82,6 @@ class ltcl_string_map implementation.
       act = lo_cut->get( 'A' ) ).
 
     " From struc
-    data: begin of ls_dummy, a type string value '1', end of ls_dummy.
     lo_cut = zcl_abap_string_map=>create( iv_from = ls_dummy ).
     cl_abap_unit_assert=>assert_equals(
       exp = 1
@@ -94,7 +94,9 @@ class ltcl_string_map implementation.
 
   method freeze.
 
-    data lx type ref to cx_root.
+    data lt_entries type zcl_abap_string_map=>tty_entries.
+    data ls_dummy type syst.
+    data lx_e type ref to cx_root.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
@@ -107,10 +109,10 @@ class ltcl_string_map implementation.
         iv_key = 'A'
         iv_val = '2' ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     try.
@@ -118,57 +120,55 @@ class ltcl_string_map implementation.
         iv_key = 'B'
         iv_val = '2' ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     try.
       lo_cut->delete( 'A' ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     try.
       lo_cut->clear( ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
-    data lt_entries type zcl_abap_string_map=>tty_entries.
     try.
       lo_cut->from_entries( lt_entries ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
-    data ls_dummy type syst.
     try.
       lo_cut->from_struc( ls_dummy ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     try.
       lo_cut->from_string( 'x=y' ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'String map is read only'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
   endmethod.
@@ -396,7 +396,8 @@ class ltcl_string_map implementation.
 
     data ls_struc_act type ty_struc.
     data ls_struc_exp type ty_struc.
-    data lx type ref to cx_root.
+    data lx_e type ref to cx_root.
+    data lo_struc type ref to zcl_abap_string_map.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
@@ -420,13 +421,14 @@ class ltcl_string_map implementation.
     try.
       lo_cut->to_struc( changing cs_container = ls_struc_act ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'Component Z not found in target'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
-    lo_cut->strict( abap_false )->to_struc( changing cs_container = ls_struc_act ).
+    lo_struc = lo_cut->strict( abap_false ).
+    lo_struc->to_struc( changing cs_container = ls_struc_act ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = ls_struc_exp
@@ -437,26 +439,26 @@ class ltcl_string_map implementation.
   method from_to_struc_negative.
 
     data lt_dummy type string_table.
-    data lx type ref to cx_root.
+    data lx_e type ref to cx_root.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
     try.
       lo_cut->from_struc( lt_dummy ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'Only structures supported'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
     try.
       lo_cut->to_struc( changing cs_container = lt_dummy ).
       cl_abap_unit_assert=>fail( ).
-    catch cx_root into lx.
+    catch cx_root into lx_e.
       cl_abap_unit_assert=>assert_equals(
         exp = 'Only structures supported'
-        act = lx->get_text( ) ).
+        act = lx_e->get_text( ) ).
     endtry.
 
   endmethod.
@@ -464,12 +466,12 @@ class ltcl_string_map implementation.
   method from_entries.
 
     types:
-      begin of lty_pair,
+      begin of ty_pair,
         key type string,
         val type string,
-      end of lty_pair.
+      end of ty_pair.
 
-    data lt_entries type table of lty_pair.
+    data lt_entries type table of ty_pair.
     data ls_entry like line of lt_entries.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
@@ -498,6 +500,7 @@ class ltcl_string_map implementation.
 
   method case_insensitive.
 
+    data lt_exp_keys type string_table.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( iv_case_insensitive = abap_true ).
 
@@ -530,7 +533,6 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_true( lo_cut->has( 'b' ) ).
     cl_abap_unit_assert=>assert_false( lo_cut->has( 'c' ) ).
 
-    data lt_exp_keys type string_table.
     append 'A' to lt_exp_keys.
     append 'B' to lt_exp_keys.
 
@@ -552,6 +554,8 @@ class ltcl_string_map implementation.
 
   method set_clike.
 
+    data lv_char type c length 10.
+    data lv_numc type n length 4.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
@@ -562,13 +566,11 @@ class ltcl_string_map implementation.
       iv_key = `B`
       iv_val = `bvalue` ).
 
-    data lv_char type c length 10.
     lv_char = 'C'.
     lo_cut->set(
       iv_key = lv_char
       iv_val = lv_char ).
 
-    data lv_numc type n length 4.
     lv_numc = '123'.
     lo_cut->set(
       iv_key = lv_numc
@@ -588,6 +590,7 @@ class ltcl_string_map implementation.
 
   method from_string.
 
+    data lx_e type ref to lcx_error.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
@@ -606,12 +609,11 @@ class ltcl_string_map implementation.
       act = lo_cut->get( 'c' )
       exp = 'space   space' ).
 
-    data lx type ref to lcx_error.
     try.
       lo_cut->from_string( `x=y,  ` ).
-    catch lcx_error into lx.
+    catch lcx_error into lx_e.
       cl_abap_unit_assert=>assert_char_cp(
-        act = lx->get_text( )
+        act = lx_e->get_text( )
         exp = 'Empty key*' ).
     endtry.
 
