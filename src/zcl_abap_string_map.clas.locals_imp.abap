@@ -21,10 +21,10 @@ endclass.
 
 class lcx_error implementation.
   method raise.
-    data lx type ref to lcx_error.
-    create object lx.
-    lx->msg = iv_msg.
-    lx->if_t100_message~t100key = c_error_signature.
-    raise exception lx.
+    data lx_e type ref to lcx_error.
+    create object lx_e.
+    lx_e->msg = iv_msg.
+    lx_e->if_t100_message~t100key = c_error_signature.
+    raise exception lx_e.
   endmethod.
 endclass.
