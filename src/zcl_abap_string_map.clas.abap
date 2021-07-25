@@ -11,11 +11,11 @@ class zcl_abap_string_map definition
       begin of ty_entry,
         k type string,
         v type string,
-      end of ty_entry .
+      end of ty_entry.
     types:
-      tty_entries type standard table of ty_entry with key k .
+      tty_entries type standard table of ty_entry with key k.
     types:
-      tts_entries type sorted table of ty_entry with unique key k .
+      tts_entries type sorted table of ty_entry with unique key k.
 
     data mt_entries type tts_entries read-only.
 
@@ -24,7 +24,7 @@ class zcl_abap_string_map definition
         !iv_case_insensitive type abap_bool default abap_false
         !iv_from type any optional
       returning
-        value(ro_instance) type ref to zcl_abap_string_map .
+        value(ro_instance) type ref to zcl_abap_string_map.
     methods constructor
       importing
         !iv_case_insensitive type abap_bool default abap_false
@@ -34,12 +34,12 @@ class zcl_abap_string_map definition
       importing
         !iv_key type clike
       returning
-        value(rv_val) type string .
+        value(rv_val) type string.
     methods has
       importing
         !iv_key type clike
       returning
-        value(rv_has) type abap_bool .
+        value(rv_has) type abap_bool.
     methods set
       importing
         !iv_key type clike
@@ -48,40 +48,49 @@ class zcl_abap_string_map definition
         value(ro_map) type ref to zcl_abap_string_map.
     methods size
       returning
-        value(rv_size) type i .
+        value(rv_size) type i.
     methods is_empty
       returning
-        value(rv_yes) type abap_bool .
+        value(rv_yes) type abap_bool.
     methods delete
       importing
-        !iv_key type clike .
+        !iv_key type clike.
     methods keys
       returning
-        value(rt_keys) type string_table .
+        value(rt_keys) type string_table.
     methods values
       returning
-        value(rt_values) type string_table .
+        value(rt_values) type string_table.
     methods clear.
+
+    methods from_struc
+      importing
+        !is_container type any
+      returning
+        value(ro_instance) type ref to zcl_abap_string_map.
+    methods from_entries
+      importing
+        !it_entries type any table
+      returning
+        value(ro_instance) type ref to zcl_abap_string_map.
+    methods from_string
+      importing
+        !iv_string_params type csequence
+      returning
+        value(ro_instance) type ref to zcl_abap_string_map.
+
     methods to_struc
       changing
         !cs_container type any.
-    methods from_struc
-      importing
-        !is_container type any.
-    methods from_entries
-      importing
-        !it_entries type any table.
-    methods from_string
-      importing
-        !iv_string_params type csequence.
     methods to_string
       returning
         value(rv_string) type string.
+
     methods strict
       importing
         !iv_strict type abap_bool default abap_true
       returning
-        value(ro_instance) type ref to zcl_abap_string_map .
+        value(ro_instance) type ref to zcl_abap_string_map.
     methods freeze.
 
   protected section.
@@ -188,6 +197,8 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
         iv_val = <i>-v ).
     endloop.
 
+    ro_instance = me.
+
   endmethod.
 
 
@@ -217,6 +228,8 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
         iv_key = lv_key
         iv_val = lv_val ).
     endloop.
+
+    ro_instance = me.
 
   endmethod.
 
@@ -249,6 +262,8 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
         iv_key = |{ <c>-name }|
         iv_val = |{ <val> }| ).
     endloop.
+
+    ro_instance = me.
 
   endmethod.
 

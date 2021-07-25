@@ -375,7 +375,7 @@ class ltcl_string_map implementation.
       iv_key = 'z'
       iv_val = 'xyz' ).
 
-    lo_cut->from_struc( ls_struc ).
+    lo_cut = lo_cut->from_struc( ls_struc ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = 3
@@ -484,7 +484,7 @@ class ltcl_string_map implementation.
     ls_entry-val = '123'.
     append ls_entry to lt_entries.
 
-    lo_cut->from_entries( lt_entries ).
+    lo_cut = lo_cut->from_entries( lt_entries ).
 
     cl_abap_unit_assert=>assert_equals(
       exp = 2
@@ -594,7 +594,7 @@ class ltcl_string_map implementation.
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( ).
 
-    lo_cut->from_string( 'a = avalue, b = some data, c = space   space' ).
+    lo_cut = lo_cut->from_string( 'a = avalue, b = some data, c = space   space' ).
 
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->size( )
