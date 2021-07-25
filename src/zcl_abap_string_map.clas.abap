@@ -6,6 +6,8 @@ class zcl_abap_string_map definition
   public section.
 
     constants version type string value 'v1.0.2'.
+    constants origin type string value 'https://github.com/sbcgua/abap-string-map'.
+    constants license type string value 'MIT'.
 
     types:
       begin of ty_entry,
