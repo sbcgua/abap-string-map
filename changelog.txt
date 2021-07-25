@@ -1,0 +1,17 @@
+Abap String Map changelog
+=========================
+
+Legend
+------
+* : fixed
+! : changed
++ : added
+- : removed
+
+v1.0.3, 2021-07-25
+------------------
+! BREAKING: from_struc does not clears the state anymore, so all from* methods ADD values
++ from_* methods return self (for chaining)
++ from_map - merges a map into a map
+* more accurate case sensitivity checks, especially when creating from another map
+* some more UTs
