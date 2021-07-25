@@ -78,6 +78,11 @@ class zcl_abap_string_map definition
         !iv_string_params type csequence
       returning
         value(ro_instance) type ref to zcl_abap_string_map.
+    methods from_map
+      importing
+        !io_string_map type ref to zcl_abap_string_map
+      returning
+        value(ro_instance) type ref to zcl_abap_string_map.
 
     methods to_struc
       changing
@@ -135,7 +140,12 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
           catch cx_sy_move_cast_error.
             lcx_error=>raise( 'Incorrect string map instance to copy from' ).
           endtry.
-          me->mt_entries = lo_from->mt_entries.
+
+          if mt_entries is initial and mv_case_insensitive = abap_false.
+            me->mt_entries = lo_from->mt_entries. " shortcut, maybe remove for safety
+          else.
+            me->from_map( lo_from ).
+          endif.
 
         when cl_abap_typedescr=>typekind_table.
           me->from_entries( iv_from ).
@@ -187,16 +197,20 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
     field-symbols <i> type ty_entry.
 
-    if mv_read_only = abap_true.
-      lcx_error=>raise( 'String map is read only' ).
-    endif.
-
     loop at it_entries assigning <i> casting.
       set(
         iv_key = <i>-k
         iv_val = <i>-v ).
     endloop.
 
+    ro_instance = me.
+
+  endmethod.
+
+
+  method from_map.
+
+    from_entries( io_string_map->mt_entries ).
     ro_instance = me.
 
   endmethod.
@@ -214,6 +228,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
 
     data lv_key type string.
     data lv_val type string.
+
     loop at lt_lines assigning <i>.
       split <i> at '=' into lv_key lv_val.
       shift lv_key right deleting trailing space.
@@ -240,11 +255,6 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     data lo_struc type ref to cl_abap_structdescr.
     field-symbols <c> like line of lo_struc->components.
     field-symbols <val> type any.
-
-    if mv_read_only = abap_true.
-      lcx_error=>raise( 'String map is read only' ).
-    endif.
-
 
     lo_type = cl_abap_typedescr=>describe_by_data( is_container ).
     if lo_type->type_kind <> cl_abap_typedescr=>typekind_struct1
