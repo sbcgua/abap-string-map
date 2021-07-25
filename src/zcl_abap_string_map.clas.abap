@@ -245,7 +245,6 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
       lcx_error=>raise( 'String map is read only' ).
     endif.
 
-    clear mt_entries.
 
     lo_type = cl_abap_typedescr=>describe_by_data( is_container ).
     if lo_type->type_kind <> cl_abap_typedescr=>typekind_struct1
