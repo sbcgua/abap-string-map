@@ -5,7 +5,7 @@ class zcl_abap_string_map definition
 
   public section.
 
-    constants version type string value 'v1.0.3'.
+    constants version type string value 'v1.0.2'.
     constants origin type string value 'https://github.com/sbcgua/abap-string-map'.
     constants license type string value 'MIT'.
 
@@ -25,6 +25,7 @@ class zcl_abap_string_map definition
       importing
         !iv_case_insensitive type abap_bool default abap_false
         !iv_from type any optional
+        preferred parameter iv_from
       returning
         value(ro_instance) type ref to zcl_abap_string_map.
     methods constructor
