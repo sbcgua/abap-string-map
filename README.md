@@ -1,7 +1,7 @@
 ![abaplint](https://github.com/sbcgua/abap-string-map/workflows/abaplint/badge.svg)
 ![abap package version](https://img.shields.io/endpoint?url=https://shield.abap.space/version-shield-json/github/sbcgua/abap-string-map/src/zcl_abap_string_map.clas.abap)
 
-# Abap string map
+# ABAP string map
 
 String map primitive implementation for abap
 
@@ -77,8 +77,8 @@ types:
 
 data lt_entries type table of ty_my_key_value.
 lt_entries = value #(
-  ( key = 'hello' value 'world' )
-  ( key = 'and' value 'another' )
+  ( key = 'hello' value = 'world' )
+  ( key = 'and' value = 'another' )
 ).
 lo_map->from_entries( lt_entries ).
 ```
