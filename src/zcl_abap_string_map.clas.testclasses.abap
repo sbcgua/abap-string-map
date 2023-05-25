@@ -28,6 +28,7 @@ class ltcl_string_map definition
     methods from_entries for testing.
     methods from_string for testing.
     methods from_map for testing.
+    methods merge for testing.
 
     methods to_struc for testing.
     methods to_string for testing.
@@ -763,6 +764,76 @@ class ltcl_string_map implementation.
     cl_abap_unit_assert=>assert_equals(
       act = lo_cut->get( 'c' )
       exp = '3' ).
+
+  endmethod.
+
+  method merge.
+
+    data lo_src type ref to zcl_abap_string_map.
+    data lo_cut type ref to zcl_abap_string_map.
+
+    lo_cut = zcl_abap_string_map=>create( ).
+    lo_cut->set(
+      iv_key = 'a'
+      iv_val = '1' ).
+    lo_cut->set(
+      iv_key = 'b'
+      iv_val = '2' ).
+
+    lo_src = zcl_abap_string_map=>create( ).
+    lo_src->set(
+      iv_key = 'b'
+      iv_val = '20' ).
+    lo_src->set(
+      iv_key = 'c'
+      iv_val = '30' ).
+
+    lo_cut->merge( lo_src ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->size( )
+      exp = 3 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'a' )
+      exp = '1' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'b' )
+      exp = '20' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'c' )
+      exp = '30' ).
+
+    " Case 2
+    lo_cut = zcl_abap_string_map=>create( iv_case_insensitive = abap_true ).
+    lo_cut->set(
+      iv_key = 'a'
+      iv_val = '1' ).
+    lo_cut->set(
+      iv_key = 'b'
+      iv_val = '2' ).
+
+    lo_src = zcl_abap_string_map=>create( ).
+    lo_src->set(
+      iv_key = 'B'
+      iv_val = '200' ).
+    lo_src->set(
+      iv_key = 'D'
+      iv_val = '400' ).
+
+    lo_cut->merge( lo_src ).
+
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->size( )
+      exp = 3 ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'a' )
+      exp = '1' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'b' )
+      exp = '200' ).
+    cl_abap_unit_assert=>assert_equals(
+      act = lo_cut->get( 'd' )
+      exp = '400' ).
 
   endmethod.
 

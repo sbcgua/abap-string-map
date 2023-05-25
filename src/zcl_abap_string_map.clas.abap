@@ -86,6 +86,11 @@ class zcl_abap_string_map definition
         !io_string_map type ref to zcl_abap_string_map
       returning
         value(ro_instance) type ref to zcl_abap_string_map.
+    methods merge
+      importing
+        !io_string_map type ref to zcl_abap_string_map
+      returning
+        value(ro_instance) type ref to zcl_abap_string_map.
 
     methods to_struc
       changing
@@ -325,6 +330,19 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     field-symbols <entry> like line of mt_entries.
     loop at mt_entries assigning <entry>.
       append <entry>-k to rt_keys.
+    endloop.
+
+  endmethod.
+
+
+  method merge.
+
+    field-symbols <entry> like line of mt_entries.
+
+    loop at io_string_map->mt_entries assigning <entry>.
+      set(
+        iv_key = <entry>-k
+        iv_val = <entry>-v ).
     endloop.
 
   endmethod.
