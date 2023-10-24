@@ -345,6 +345,8 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
         iv_val = <entry>-v ).
     endloop.
 
+    ro_instance = me.
+
   endmethod.
 
 
