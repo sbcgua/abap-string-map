@@ -19,6 +19,7 @@ class ltcl_string_map definition
     methods keys_values for testing.
     methods case_insensitive for testing.
     methods set_clike for testing.
+    methods setx for testing.
 
     methods strict for testing.
     methods freeze for testing.
@@ -924,6 +925,29 @@ class ltcl_string_map implementation.
         act = lx->get_text( )
         exp = '*table line*' ).
     endtry.
+
+  endmethod.
+
+  method setx.
+
+    data lo_cut type ref to zcl_abap_string_map.
+
+    lo_cut = zcl_abap_string_map=>create( ).
+
+    lo_cut->setx( 'a:1' ).
+    lo_cut->setx( |b : 2| ).
+    lo_cut->setx( ':c' ).
+    lo_cut->setx( '' ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 2
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = lo_cut->get( 'a' )
+      act = '1' ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = lo_cut->get( 'b' )
+      act = '2' ).
 
   endmethod.
 
