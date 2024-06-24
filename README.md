@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD041 -->
 ![abaplint](https://github.com/sbcgua/abap-string-map/workflows/abaplint/badge.svg)
 ![abap package version](https://img.shields.io/endpoint?url=https://shield.abap.space/version-shield-json/github/sbcgua/abap-string-map/src/zcl_abap_string_map.clas.abap)
 
@@ -83,6 +84,19 @@ lt_entries = value #(
 lo_map->from_entries( lt_entries ).
 ```
 
+- implements `to_entries` - the opposite to `from_entries`, saves data to a table with 2 char-like components
+
+```abap
+types:
+  begin of ty_my_key_value,
+    a type string,
+    b type c length 10,
+  end of ty_my_key_value.
+
+data lt_entries type table of ty_my_key_value.
+lo_map->to_entries( changing ct_entries = lt_entries ).
+```
+
 - implements `from_string` - this parses string of pairs like `a = b, x = y` into map. Spaces are condensed. `to_string` renders in string representation (careful with case insensitive - keys will be upper-cased).
 
 ```abap
@@ -126,5 +140,6 @@ lo_map->set(
 
 For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
 
-### Blog posts
-- https://blogs.sap.com/2020/08/04/bicycles.-1-string-map/
+## Blog posts
+
+- [Bicycles: String map](https://blogs.sap.com/2020/08/04/bicycles.-1-string-map)
