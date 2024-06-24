@@ -846,44 +846,48 @@ class ltcl_string_map implementation.
         a type string,
         b type string,
       end of lty_str,
-      ltty_str type standard table of lty_str,
+      lty_str_t type standard table of lty_str,
       begin of lty_char,
         a type c length 10,
         b type c length 10,
       end of lty_char,
-      ltty_char type standard table of lty_char,
+      lty_char_t type standard table of lty_char,
       begin of lty_bad1,
         a type c length 10,
       end of lty_bad1,
-      ltty_bad1 type standard table of lty_bad1,
+      lty_bad1_t type standard table of lty_bad1,
       begin of lty_bad2,
         a type i,
         b type i,
       end of lty_bad2,
-      ltty_bad2 type standard table of lty_bad2.
+      lty_bad2_t type standard table of lty_bad2.
 
     data lo_cut type ref to zcl_abap_string_map.
     lo_cut = zcl_abap_string_map=>create( `x=1,y=2` ).
 
-    data lt_str_act type ltty_str.
-    data lt_str_exp type ltty_str.
+    data lt_str_act type lty_str_t.
+    data lt_str_exp type lty_str_t.
     data ls_str like line of lt_str_act.
-    data lt_char_act type ltty_char.
-    data lt_char_exp type ltty_char.
+    data lt_char_act type lty_char_t.
+    data lt_char_exp type lty_char_t.
     data ls_char like line of lt_char_act.
 
-    ls_str-a = 'x'. ls_str-b = '1'.
+    ls_str-a = 'x'.
+    ls_str-b = '1'.
     append ls_str to lt_str_exp.
-    ls_str-a = 'y'. ls_str-b = '2'.
+    ls_str-a = 'y'.
+    ls_str-b = '2'.
     append ls_str to lt_str_exp.
     lo_cut->to_entries( changing ct_entries = lt_str_act ).
     cl_abap_unit_assert=>assert_equals(
       act = lt_str_act
       exp = lt_str_exp ).
 
-    ls_char-a = 'x'. ls_char-b = '1'.
+    ls_char-a = 'x'.
+    ls_char-b = '1'.
     append ls_char to lt_char_exp.
-    ls_char-a = 'y'. ls_char-b = '2'.
+    ls_char-a = 'y'.
+    ls_char-b = '2'.
     append ls_char to lt_char_exp.
     lo_cut->to_entries( changing ct_entries = lt_char_act ).
     cl_abap_unit_assert=>assert_equals(
@@ -891,7 +895,7 @@ class ltcl_string_map implementation.
       exp = lt_char_exp ).
 
     data lx type ref to lcx_error.
-    data lt_bad1 type ltty_bad1.
+    data lt_bad1 type lty_bad1_t.
     try.
       lo_cut->to_entries( changing ct_entries = lt_bad1 ).
       cl_abap_unit_assert=>fail( ).
@@ -901,7 +905,7 @@ class ltcl_string_map implementation.
         exp = '*number*' ).
     endtry.
 
-    data lt_bad2 type ltty_bad2.
+    data lt_bad2 type lty_bad2_t.
     try.
       lo_cut->to_entries( changing ct_entries = lt_bad2 ).
       cl_abap_unit_assert=>fail( ).
