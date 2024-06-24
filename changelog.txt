@@ -8,6 +8,10 @@ Legend
 + : added
 - : removed
 
+v1.0.4, 2024-06-24
+------------------
++ to_entries - saves entries to a standard table with 2 char-like components (#11)
+
 v1.0.3, 2021-07-25
 ------------------
 ! BREAKING: from_struc does not clears the state anymore, so all from* methods ADD values

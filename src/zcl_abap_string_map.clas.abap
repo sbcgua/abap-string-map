@@ -98,6 +98,9 @@ class zcl_abap_string_map definition
     methods to_string
       returning
         value(rv_string) type string.
+    methods to_entries
+      changing
+        !ct_entries type standard table.
 
     methods strict
       importing
@@ -390,6 +393,50 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method strict.
     mv_is_strict = iv_strict.
     ro_instance = me.
+  endmethod.
+
+
+  method to_entries.
+
+    data lo_ttype type ref to cl_abap_tabledescr.
+    data lo_dtype type ref to cl_abap_datadescr.
+    data lo_stype type ref to cl_abap_structdescr.
+
+    lo_ttype ?= cl_abap_typedescr=>describe_by_data( ct_entries ).
+    lo_dtype = lo_ttype->get_table_line_type( ).
+
+    if lo_dtype->kind <> cl_abap_typedescr=>kind_struct.
+      lcx_error=>raise( 'Unsupported table line type' ).
+    endif.
+
+    lo_stype ?= lo_dtype.
+
+    if lines( lo_stype->components ) <> 2.
+      lcx_error=>raise( 'Wrong number of fields in target table (must be 2)' ).
+    endif.
+
+    field-symbols <c> like line of lo_stype->components.
+    loop at lo_stype->components assigning <c>.
+      if not ( <c>-type_kind = cl_abap_typedescr=>typekind_char or <c>-type_kind = cl_abap_typedescr=>typekind_string ).
+        lcx_error=>raise( 'Wrong type of fields in target table (must be char or string)' ).
+      endif.
+    endloop.
+
+    field-symbols <entry> like line of mt_entries.
+    field-symbols <to> type any.
+    field-symbols <k> type any.
+    field-symbols <v> type any.
+    loop at mt_entries assigning <entry>.
+      append initial line to ct_entries assigning <to>.
+      assert sy-subrc = 0.
+      assign component 1 of structure <to> to <k>.
+      assert sy-subrc = 0.
+      assign component 2 of structure <to> to <v>.
+      assert sy-subrc = 0.
+      <k> = <entry>-k.
+      <v> = <entry>-v.
+    endloop.
+
   endmethod.
 
 

@@ -2,6 +2,7 @@
 <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
  <asx:values>
   <DATA>
+   <NAME>Abap String Map</NAME>
    <MASTER_LANGUAGE>E</MASTER_LANGUAGE>
    <STARTING_FOLDER>/src/</STARTING_FOLDER>
    <FOLDER_LOGIC>PREFIX</FOLDER_LOGIC>
@@ -9,12 +10,9 @@
     <item>/.gitignore</item>
     <item>/LICENSE</item>
     <item>/README.md</item>
-    <item>/package.json</item>
-    <item>/.travis.yml</item>
-    <item>/.gitlab-ci.yml</item>
     <item>/abaplint.json</item>
-    <item>/azure-pipelines.yml</item>
    </IGNORE>
+   <VERSION_CONSTANT>ZCL_ABAP_STRING_MAP=&gt;VERSION</VERSION_CONSTANT>
   </DATA>
  </asx:values>
 </asx:abap>
