@@ -39,6 +39,12 @@ lo_map->set(
   iv_val = '2' ).
 ```
 
+- there is also `setx` - a more readable yet not so strict version of `set`. Can be useful for multiple sets in a raw.
+
+```abap
+lo_map->setx( 'A:1' )->setx( |B : { '2' }| ).
+```
+
 - implements `keys`, `values`
 
 ```abap

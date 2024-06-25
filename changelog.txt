@@ -11,6 +11,7 @@ Legend
 v1.0.4, 2024-06-24
 ------------------
 + to_entries - saves entries to a standard table with 2 char-like components (#11)
++ setx - simplified and more readable version of set (#12)
 
 v1.0.3, 2021-07-25
 ------------------

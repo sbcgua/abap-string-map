@@ -49,6 +49,11 @@ class zcl_abap_string_map definition
         !iv_val type clike
       returning
         value(ro_map) type ref to zcl_abap_string_map.
+    methods setx
+      importing
+        !iv_str type csequence
+      returning
+        value(ro_map) type ref to zcl_abap_string_map.
     methods size
       returning
         value(rv_size) type i.
@@ -379,6 +384,32 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
     endif.
 
     ro_map = me.
+
+  endmethod.
+
+
+  method setx.
+
+    data lv_key type string.
+    data lv_val type string.
+
+    ro_map = me.
+
+    if iv_str is initial.
+      return.
+    endif.
+
+    split iv_str at ':' into lv_key lv_val.
+    condense lv_key.
+    condense lv_val.
+
+    if lv_key is initial.
+      return.
+    endif.
+
+    set(
+      iv_key = lv_key
+      iv_val = lv_val ).
 
   endmethod.
 
