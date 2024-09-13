@@ -17,13 +17,15 @@ class zcl_abap_string_map definition
     types:
       tty_entries type standard table of ty_entry with key k.
     types:
-      tts_entries type sorted table of ty_entry with unique key k.
+      tts_entries type sorted table of ty_entry with non-unique key k.
 
     data mt_entries type tts_entries read-only.
 
     class-methods create
       importing
         !iv_case_insensitive type abap_bool default abap_false
+        !iv_list_mode type abap_bool default abap_false " removes uniqueness requirement,
+                                                        " use with care: it is not the primary scenario
         !iv_from type any optional
         preferred parameter iv_from
       returning
@@ -31,6 +33,8 @@ class zcl_abap_string_map definition
     methods constructor
       importing
         !iv_case_insensitive type abap_bool default abap_false
+        !iv_list_mode type abap_bool default abap_false " removes uniqueness requirement,
+                                                        " use with care: it is not the primary scenario
         !iv_from type any optional.
 
     methods get
@@ -119,6 +123,7 @@ class zcl_abap_string_map definition
     data mv_is_strict type abap_bool.
     data mv_read_only type abap_bool.
     data mv_case_insensitive type abap_bool.
+    data mv_list_mode type abap_bool.
 ENDCLASS.
 
 
@@ -140,6 +145,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method constructor.
     mv_is_strict = abap_true.
     mv_case_insensitive = iv_case_insensitive.
+    mv_list_mode = iv_list_mode.
 
     if iv_from is not initial.
       data lo_type type ref to cl_abap_typedescr.
@@ -180,6 +186,7 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
   method create.
     create object ro_instance
       exporting
+        iv_list_mode = iv_list_mode
         iv_case_insensitive = iv_case_insensitive
         iv_from = iv_from.
   endmethod.
@@ -374,13 +381,19 @@ CLASS ZCL_ABAP_STRING_MAP IMPLEMENTATION.
       lv_key = iv_key.
     endif.
 
-    read table mt_entries assigning <entry> with key k = lv_key.
-    if sy-subrc = 0.
-      <entry>-v = iv_val.
-    else.
+    if mv_list_mode = abap_true.
       ls_entry-k = lv_key.
       ls_entry-v = iv_val.
       insert ls_entry into table mt_entries.
+    else.
+      read table mt_entries assigning <entry> with key k = lv_key.
+      if sy-subrc = 0.
+        <entry>-v = iv_val.
+      else.
+        ls_entry-k = lv_key.
+        ls_entry-v = iv_val.
+        insert ls_entry into table mt_entries.
+      endif.
     endif.
 
     ro_map = me.

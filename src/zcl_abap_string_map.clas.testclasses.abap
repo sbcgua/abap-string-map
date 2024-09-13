@@ -37,6 +37,7 @@ class ltcl_string_map definition
 
     methods create_from for testing.
     methods case_insensitive_create for testing.
+    methods list_mode for testing.
 
 endclass.
 
@@ -950,5 +951,51 @@ class ltcl_string_map implementation.
       act = '2' ).
 
   endmethod.
+
+  method list_mode.
+
+    data lo_cut type ref to zcl_abap_string_map.
+
+    lo_cut = zcl_abap_string_map=>create( ).
+    lo_cut->setx( 'a:1' ).
+    lo_cut->setx( 'a:2' ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 1
+      act = lo_cut->size( ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = lo_cut->get( 'a' )
+      act = '2' ).
+
+    lo_cut = zcl_abap_string_map=>create( iv_list_mode = abap_true ).
+    lo_cut->setx( 'a:1' ).
+    lo_cut->setx( 'a:2' ).
+
+    cl_abap_unit_assert=>assert_equals(
+      exp = 2
+      act = lo_cut->size( ) ).
+
+    data lt_entries type zcl_abap_string_map=>tty_entries.
+    data ls_item like line of lt_entries.
+    lt_entries = lo_cut->mt_entries.
+    sort lt_entries by k v.
+
+    read table lt_entries index 1 into ls_item.
+    cl_abap_unit_assert=>assert_equals(
+      exp = '1'
+      act = ls_item-v ).
+
+    read table lt_entries index 2 into ls_item.
+    cl_abap_unit_assert=>assert_equals(
+      exp = '2'
+      act = ls_item-v ).
+
+    lo_cut->delete( 'a' ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = 0
+      act = lo_cut->size( ) ).
+
+  endmethod.
+
 
 endclass.
