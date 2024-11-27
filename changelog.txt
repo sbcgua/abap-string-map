@@ -8,6 +8,10 @@ Legend
 + : added
 - : removed
 
+v1.0.5, 2024-??-??
+------------------
++ list mode (mode with no uniquness guarantee)
+
 v1.0.4, 2024-06-24
 ------------------
 + to_entries - saves entries to a standard table with 2 char-like components (#11)
