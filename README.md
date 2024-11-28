@@ -144,7 +144,7 @@ lo_map->set(
   iv_val = '2' ). " raises cx_no_check
 ```
 
-- you may switch the map into "list" mode - this way there is no guarantee for the record uniquiness, but can be usedful for some applications.
+- you may switch the map into "list" mode - this way there is no guarantee for the record uniqueness, but can be useful for some applications.
 
 ```abap
   lo = zcl_abap_string_map=>create( iv_list_mode = abap_false ).

@@ -8,9 +8,9 @@ Legend
 + : added
 - : removed
 
-v1.0.5, 2024-??-??
+v1.0.5, 2024-11-28
 ------------------
-+ list mode (mode with no uniquness guarantee)
++ list mode (mode with no uniqueness guarantee) (#13)
 
 v1.0.4, 2024-06-24
 ------------------
