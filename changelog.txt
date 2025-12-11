@@ -8,6 +8,10 @@ Legend
 + : added
 - : removed
 
+v1.0.?, ????
+------------------
+* Fix UT compatibility with 7.02 (#15, @mbtools)
+
 v1.0.5, 2024-11-28
 ------------------
 + list mode (mode with no uniqueness guarantee) (#13)
