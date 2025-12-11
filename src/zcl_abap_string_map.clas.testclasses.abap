@@ -579,11 +579,21 @@ class ltcl_string_map implementation.
       exp = 'bvalue'
       act = lo_cut->get( 'b' ) ).
 
-    cl_abap_unit_assert=>assert_true( lo_cut->has( 'A' ) ).
-    cl_abap_unit_assert=>assert_true( lo_cut->has( 'a' ) ).
-    cl_abap_unit_assert=>assert_true( lo_cut->has( 'B' ) ).
-    cl_abap_unit_assert=>assert_true( lo_cut->has( 'b' ) ).
-    cl_abap_unit_assert=>assert_false( lo_cut->has( 'c' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_true
+      act = lo_cut->has( 'A' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_true
+      act = lo_cut->has( 'a' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_true
+      act = lo_cut->has( 'B' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_true
+      act = lo_cut->has( 'b' ) ).
+    cl_abap_unit_assert=>assert_equals(
+      exp = abap_false
+      act = lo_cut->has( 'c' ) ).
 
     append 'A' to lt_exp_keys.
     append 'B' to lt_exp_keys.
