@@ -152,6 +152,36 @@ lo_map->set(
 
 For more examples see [unit tests code](https://github.com/sbcgua/abap-string-map/blob/master/src/zcl_abap_string_map.clas.testclasses.abap)
 
+## ABAP string set
+
+`zcl_abap_string_set` stores unique, case-sensitive string values. `add`,
+`delete` and `has` accept `clike` values; duplicate additions and deleting
+missing values are harmless. Empty strings are valid members. `add` supports
+chaining and `size` counts distinct values.
+
+```abap
+data lo_set type ref to zcl_abap_string_set.
+data lt_range type range of string.
+
+lo_set = zcl_abap_string_set=>create( ).
+lo_set->add( 'B' )->add( 'A' )->add( 'A' ).
+lo_set->has( 'A' ). " => abap_true
+lo_set->size( ).   " => 2
+lo_set->to_range( changing ct_range = lt_range ).
+" Appends I/EQ rows for A and B, with initial HIGH
+lo_set->delete( 'A' ).
+```
+
+`to_range` accepts a standard range table with character fields `SIGN` and
+`OPTION` and elementary fields `LOW` and `HIGH`. Values are appended in
+string sort order, using normal ABAP assignment conversion to the target
+`LOW` type (including truncation for fixed-length character fields).
+Existing rows are preserved. Invalid range structures or failed conversions
+raise `cx_no_check` without changing the target table.
+
+See the [string set unit tests](src/zcl_abap_string_set.clas.testclasses.abap)
+for typed ranges and error handling examples.
+
 ## Blog posts
 
 - [Bicycles: String map](https://blogs.sap.com/2020/08/04/bicycles.-1-string-map)
